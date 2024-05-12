@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from modules.Cellsort_Sim import Cellsort_Simulator
 import os
-from datasets import Cell_Combined_Dataset
+
+from epns.modules.Cellsort_Sim import Cellsort_Simulator
+from epns.datasets import Cell_Combined_Dataset
 
 config_dict = dict(
     ###### general ######

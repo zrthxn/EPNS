@@ -43,7 +43,7 @@ import torch
 from evaluation.experiment_utils import load_model_and_get_dataloaders
 # np.random.seed(42)
 import evaluation.experiment_utils
-from utils import load_config
+from configs import load_config
 
 class n_body_plotter:
     '''

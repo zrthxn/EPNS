@@ -1,13 +1,9 @@
-import random
-import warnings
-import numpy as np
-import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from torch.nn.functional import one_hot
 
-import utils
-from modules.engine.Enc_Proc_Dec import Enc_Proc_Dec
+from .. import utils
+from .engine.Enc_Proc_Dec import Enc_Proc_Dec
 
 class Cellsort_Simulator(nn.Module):
 

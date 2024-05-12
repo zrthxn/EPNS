@@ -1,10 +1,10 @@
 import warnings
-
-import numpy as np
 import torch
 import torch.nn as nn
-from modules.engine.GNN_modules import GNN, LazyGNN, AggregateNodes, LazyEqGNN, FAGNN, LazyMLP
-from modules.engine.Grid_modules import UNet, UNetModern, GridGNN, AggregateGridNodes, GridDeepSet
+
+from .GNN_modules import GNN, LazyGNN, AggregateNodes, LazyEqGNN, FAGNN, LazyMLP
+from .Grid_modules import UNet, UNetModern, GridGNN, AggregateGridNodes, GridDeepSet
+
 EPS = 1e-5
 
 

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 
-from modules.engine.Enc_Proc_Dec import Enc_Proc_Dec
+from ..modules.engine.Enc_Proc_Dec import Enc_Proc_Dec
 
 
 class N_Body_Simulator(nn.Module):

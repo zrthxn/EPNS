@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+
+data/
+!data/link_to_data.txt
+!data/README.md

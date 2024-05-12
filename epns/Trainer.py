@@ -6,11 +6,13 @@ import torch
 import torch.nn as nn
 import time
 
-import utils
-from evaluation.experiment_utils import model_rollout
+from .evaluation.experiment_utils import model_rollout
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import *
+
+from . import utils
+from .utils import *
+
 try:
     import wandb
     use_wandb = True

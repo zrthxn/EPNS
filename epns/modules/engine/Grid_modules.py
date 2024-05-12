@@ -4,8 +4,10 @@ import torchvision
 import numpy as np
 from torch.nn import functional as F
 import warnings
+
 # Unet code:
-import utils
+
+from ... import utils
 
 ######################## BASIC UNET MODEL: ########################
 class Block(nn.Module):

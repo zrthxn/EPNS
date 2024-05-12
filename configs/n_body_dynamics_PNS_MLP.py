@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from modules.N_Body_Sim import N_Body_Simulator
 import os
-from datasets import N_Body_Dataset
+
+from epns.modules.N_Body_Sim import N_Body_Simulator
+from epns.datasets import N_Body_Dataset
 
 config_dict = dict(
     ###### general ######

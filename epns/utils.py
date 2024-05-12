@@ -1,14 +1,10 @@
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 import torch
-import configs
 from torch.nn.functional import one_hot
 import torch.nn.functional as F
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
-class Config():
-    def __init__(self, config_dict):
-        self.config_dict = config_dict
 
 def arr_to_im(arr, is_one_hot_enc=False):
     # shape arr: (c, h, w)
@@ -144,19 +140,6 @@ def create_circular_mask(h, w, center, radius):  # center in (x,y)
 
     mask = dist_from_center < radius
     return mask
-
-def load_config(cfg_str, state_dict=None):
-    cfg = getattr(configs, cfg_str)
-    cfg_dict = dict(cfg.config_dict)
-
-    if state_dict is not None:  # replace state dict str with new state dict
-        old = cfg_dict['experiment']['state_dict_fname']
-        new_state_dict_pointer = {'state_dict_fname': state_dict}
-        cfg_dict['experiment'] = new_state_dict_pointer
-        print(f'changed state dict from {old} \t\t\t to {state_dict} \t\t\t in {cfg_str}!')
-
-    cfg = Config(config_dict=cfg_dict)
-    return cfg
 
 def get_three_rotation_matrices(get_identity_rotation_matrices=False, rotate_only_2d=False):
     import math

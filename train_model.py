@@ -1,15 +1,14 @@
+import os
 import argparse
-
-import utils
-from utils import load_config
 import time
-from Trainer import Trainer
 import torch
 import torch.nn as nn
-import os
-import pickle
 import numpy as np
 import datetime
+
+from epns.Trainer import Trainer
+from configs import load_config
+from epns import utils
 
 # torch.autograd.set_detect_anomaly(True)
 def train_model(config: dict):

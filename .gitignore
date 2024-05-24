@@ -1,6 +1,9 @@
 .venv/
 __pycache__/
+.vscode/
 
 data/
 !data/link_to_data.txt
 !data/README.md
+
+.DS_Store

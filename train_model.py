@@ -10,10 +10,9 @@ from epns.trainer import Trainer
 from configs import load_config
 from epns import utils
 
+
 # torch.autograd.set_detect_anomaly(True)
 def train_model(config: dict):
-
-
     # check for some optional parameters in the config that we need to handle here:
     if 'state_dict_fname' in config['experiment'].keys():
         fname = config['experiment']['state_dict_fname']

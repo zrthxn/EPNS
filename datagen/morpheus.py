@@ -163,7 +163,9 @@ def run_simulation(output_path, hist, clean):
 
     # now start morpheus with the new xml
     command = "morpheus --file cell_and_walls_temp.xml --outdir " + data_path
-    subprocess.run(command, shell=True, env={"PATH": HOME + "/.local/bin:" + os.getenv("PATH")})
+    subprocess.run(command, shell=True, env={"PATH": HOME + "/.local/bin:" + os.getenv("PATH")}, 
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT)
     
     # now we have a bunch of .gp files, that need some editing
     # set style line 40 lc rgb "black" lw 1 -> set style line 40 lc rgb "black" lw 0
@@ -187,7 +189,7 @@ def run_simulation(output_path, hist, clean):
 
             # now run the .gp file inside the data folder
             command = "gnuplot " + file
-            subprocess.run(command, shell=True, cwd=data_path)
+            subprocess.run(command, shell=True, cwd=data_path, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
     # now queue the eval script
     # naming of the pngs: plot_00000.png -> plot_00010.png

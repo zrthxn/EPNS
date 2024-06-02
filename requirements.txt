@@ -7,3 +7,5 @@ numpy
 torchvision
 tueplots
 seaborn
+upycli
+opencv-python

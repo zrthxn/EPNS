@@ -51,7 +51,10 @@ python evaluation/run_experiments_cell.py
 
 ## Generating data
 
-The data used for training and experiments can be downloaded with the link in data/link_to_data.txt. Code for generating the datasets will be added to this repository soon.
+The data used for training and experiments can be downloaded here.
+https://drive.google.com/drive/folders/1n2RTTitoUqVhw8NIiVn_hvz8dz9u4OlW?usp=sharing
+
+Code for generating the datasets will be added to this repository soon.
 
 ---
 

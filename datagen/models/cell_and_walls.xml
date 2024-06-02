@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MorpheusModel version="4">
+    <Description>
+        <Title>Seminar</Title>
+        <Details></Details>
+    </Description>
+    <Global>
+        <Constant symbol="tumble.run_duration" value="0"/>
+        <Constant symbol="Lwall" value="10"/>
+    </Global>
+    <Space>
+        <Lattice class="square">
+            <Size symbol="size" value="100 100 0"/>
+            <Neighborhood>
+                <Order>1</Order>
+            </Neighborhood>
+            <BoundaryConditions>
+                <Condition type="noflux" boundary="x"/>
+                <Condition type="noflux" boundary="y"/>
+            </BoundaryConditions>
+        </Lattice>
+        <SpaceSymbol symbol="space"/>
+    </Space>
+    <Time>
+        <StartTime value="0"/>
+        <StopTime value="500"/>
+        <TimeSymbol symbol="time"/>
+    </Time>
+    <CellTypes>
+        <CellType name="wall" class="biological">
+            <FreezeMotion>
+                <Condition>1</Condition>
+            </FreezeMotion>
+        </CellType>
+        <CellType name="cell" class="biological">
+            <VolumeConstraint target="314" strength="1"/>
+            <ConnectivityConstraint/>
+            <PropertyVector symbol="move_dir" value="0.0, 0.0, 0.0"/>
+            <Property symbol="tumble.run_duration" name="run duration" value="0.0"/>
+            <Property symbol="tumble.last" name="last tumble event" value="0"/>
+            <Function symbol="tumble.time_left" name="time left">
+                <Expression>tumble.last + tumble.run_duration - time</Expression>
+            </Function>
+            <Event trigger="when-true" time-step="5">
+                <Condition>time >= tumble.last + tumble.run_duration</Condition>
+                <Rule symbol-ref="tumble.last">
+                    <Expression>time</Expression>
+                </Rule>
+                <Rule symbol-ref="tumble.run_duration" name="new update time">
+                    <Expression>20 * rand_gamma(0.5, 5)</Expression>
+                </Rule>
+                <Intermediate symbol="angle" value="rand_uni(1.2*pi, 1.8*pi)"/>
+                <VectorRule symbol-ref="move_dir" notation="φ,θ,r">
+                    <Expression>angle, 0 , 1</Expression>
+                </VectorRule>
+            </Event>
+            <DirectedMotion strength="0.2" direction="move_dir"/>
+        </CellType>
+        <CellType name="medium" class="medium"/>
+    </CellTypes>
+    <CPM>
+        <Interaction>
+            <Contact type2="medium" type1="cell" value="5"/>
+            <Contact type2="wall" type1="cell" value="10"/>
+        </Interaction>
+        <MonteCarloSampler stepper="edgelist">
+            <MCSDuration value="1"/>
+            <Neighborhood>
+                <Order>1</Order>
+            </Neighborhood>
+            <MetropolisKinetics temperature="1"/>
+        </MonteCarloSampler>
+        <ShapeSurface scaling="norm">
+            <Neighborhood>
+                <Distance>2.5</Distance>
+            </Neighborhood>
+        </ShapeSurface>
+    </CPM>
+    <CellPopulations>
+        <Population type="wall" size="1">
+            <InitCellObjects mode="distance">
+                <Arrangement repetitions="5, 1, 1" displacements="0, 0, 0">
+                    <Box origin="rand_uni(0.1*size.x,0.9*size.x), rand_uni(0.1*size.y,0.7*size.y), 0" size="Lwall, Lwall, 0"/>
+                </Arrangement>
+            </InitCellObjects>
+        </Population>
+        <Population type="cell" size="1">
+            <InitCellObjects mode="distance">
+                <Arrangement repetitions="1, 1, 1" displacements="1, 1, 1">
+                    <Sphere center="rand_uni(0.1*size.x,0.9*size.x), rand_uni(0.8*size.y,0.9*size.y), 0" radius="10"/>
+                </Arrangement>
+            </InitCellObjects>
+        </Population>
+    </CellPopulations>
+    <Analysis>
+        <Gnuplotter time-step="10" decorate="false" log-commands="true">
+            <Terminal name="png"/>
+            <Plot>
+                <Cells min="0.0" value="cell.type">
+                    <ColorMap>
+                        <Color color="black" value="1"/>
+                        <Color color="blue" value="0"/>
+                    </ColorMap>
+                </Cells>
+            </Plot>
+        </Gnuplotter>
+        <!--    <Disabled>
+        <Logger time-step="20">
+            <Input>
+                <Symbol symbol-ref="cell.center.x"/>
+                <Symbol symbol-ref="cell.center.y"/>
+            </Input>
+            <Output>
+                <TextOutput/>
+            </Output>
+            <Plots>
+                <Plot time-step="5000">
+                    <Style style="lines" line-width="2.0"/>
+                    <Terminal terminal="png"/>
+                    <X-axis minimum="0" maximum="size.x">
+                        <Symbol symbol-ref="cell.center.x"/>
+                    </X-axis>
+                    <Y-axis minimum="0" maximum="size.y">
+                        <Symbol symbol-ref="cell.center.y"/>
+                    </Y-axis>
+                    <Color-bar>
+                        <Symbol symbol-ref="tumble.run_duration"/>
+                    </Color-bar>
+                </Plot>
+            </Plots>
+            <Restriction>
+                <Celltype celltype="cell"/>
+            </Restriction>
+        </Logger>
+    </Disabled>
+-->
+        <ModelGraph include-tags="#untagged" format="dot" reduced="false"/>
+    </Analysis>
+</MorpheusModel>

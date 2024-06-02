@@ -9,7 +9,6 @@ from epns.datasets import Cell_Combined_Dataset
 config_dict = dict(
     ###### general ######
     device='cuda' if torch.cuda.is_available() else 'cpu',
-    # device='cpu',
 
     ###### data ######
     dataset=Cell_Combined_Dataset,  # dataset class to use (from datasets directory)
@@ -50,7 +49,7 @@ config_dict = dict(
     ),
 
     ###### training etc ######
-    loss_func=lambda pred, true: nn.CrossEntropyLoss(reduction='sum')(pred, true),  # only used for calculating some validation statistics
+    loss_func=nn.functional.cross_entropy,#lambda pred, true: nn.CrossEntropyLoss(reduction='sum')(pred, true),  # only used for calculating some validation statistics
     optimizer=torch.optim.Adam,  # optimizer
     opt_kwargs={'lr': 1e-4, 'weight_decay': 1e-4, 'betas': (0.9, 0.9), 'eps':1e-06},  # optimizer parameters
     num_epochs=180,  # number of epochs to train for

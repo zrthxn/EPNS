@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 import datetime
 
-from epns.Trainer import Trainer
+from epns.trainer import Trainer
 from configs import load_config
 from epns import utils
 
@@ -100,8 +100,14 @@ def train_model(config: dict):
     config['experiment']['state_dict_path'] = save_path
 
     # train the model:
-    train_losses, train_acc, val_losses, val_acc, best_state_dict, last_state_dict = trainer.train(
-        dataloader, val_dataloader, epochs, device, training_strategy, save_fname=fname, start_from_epoch=start_from_epoch)
+    trainer.train(
+        loader=dataloader, 
+        val_loader=val_dataloader, 
+        epochs=epochs, 
+        device=device, 
+        training_strategy=training_strategy, 
+        save_fname=fname, 
+        start_from_epoch=start_from_epoch)
 
     print(f'all done, saved at state dict at {save_path}')
 

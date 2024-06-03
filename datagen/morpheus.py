@@ -59,7 +59,7 @@ CONFIG = {
 }
 
 # read in xml
-tree = ElementTree.parse("datagen/models/cell_and_walls.xml")
+tree = ElementTree.parse("datagen/models/cell_and_walls_id.xml")
 root = tree.getroot()
 
 

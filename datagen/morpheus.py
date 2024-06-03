@@ -206,7 +206,7 @@ def simulate(
             stderr=subprocess.STDOUT)
 
         convert_csv(data_path, "logger_1_cell.id.csv", 
-            save_name=f"run_{index}",
+            save_name=f"{data_path}/run_{index}",
             cell_number=int(get_new_value("cell_number", index, first=True)),
             wall_number=int(get_new_value("wall_number", index, first=True)),
             plot=plot_hist,

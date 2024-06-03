@@ -29,15 +29,15 @@ from upycli import command
 def convert(
         path_name: str, 
         file_name: str, 
-        save_name: str = None, 
+        save_path: str = None, 
         cell_number: int = 2, 
         wall_number: int = 8,
         size: int = 100, 
         plot: bool = False,
         debug: bool = False):
     
-    if save_name is None:
-        save_name = file_name
+    if save_path is None:
+        save_path = file_name
 
     # read in the csv and parse it into single frames
     if not os.path.isdir(path_name):    
@@ -113,9 +113,5 @@ def convert(
         axs[1].invert_yaxis()
         plt.show()
 
-    # make save dir if not exists
-    if not os.path.exists("data_nparray"):
-        os.makedirs("data_nparray")
-
     # save array
-    np.save(os.path.join("data_nparray", save_name), arr)
+    np.save(save_path, arr)

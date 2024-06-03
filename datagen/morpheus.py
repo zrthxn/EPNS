@@ -157,7 +157,8 @@ def simulate(
     wall_number: int = 8,
     cell_number: int = 1,
     plot_hist: bool = False, 
-    clean: bool = True):
+    clean: bool = True,
+    debug: bool = False):
     """Run Morpheus Simulation.
 
     Args:
@@ -208,7 +209,8 @@ def simulate(
             save_name=f"run_{index}",
             cell_number=int(get_new_value("cell_number", index, first=True)),
             wall_number=int(get_new_value("wall_number", index, first=True)),
-            plot=plot_hist)
+            plot=plot_hist,
+            debug=debug)
 
         # cleanup
         os.remove("cell_and_walls_temp.xml")

@@ -33,7 +33,8 @@ def convert(
         cell_number: int = 2, 
         wall_number: int = 8,
         size: int = 100, 
-        plot: bool = False):
+        plot: bool = False,
+        debug: bool = False):
     
     if save_name is None:
         save_name = file_name
@@ -53,10 +54,11 @@ def convert(
     frames = int(len(csv_raw) / (size+1))
 
     # print in color
-    print("\033[92m>> Reading in csv file\033[0m")
-    print("| frames: ", frames)
-    print("| cells: ", cell_number)
-    print("| walls: ", wall_number)
+    if debug:
+        print("\033[92m>> Reading in csv file\033[0m")
+        print("| frames: ", frames)
+        print("| cells: ", cell_number)
+        print("| walls: ", wall_number)
 
     # form this into an nd array of dim (t, h, w, c)
     # t = time steps, h = height, w = width, c = channels == 2

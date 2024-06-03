@@ -60,4 +60,8 @@ config_dict = dict(
     num_kl_annealing_cycles=1,  # number of KL annealing cycles -- defaults to 1 if not specified
     kl_increase_proportion_per_cycle=0.125,  # proportion of each cycle spent increasing beta (vs keeping it constant),
     beta=64.,  # beta value in beta-vae loss term
+    
+    experiment={
+        "state_dict_fname": "checkpoint.pt"
+    }
 )

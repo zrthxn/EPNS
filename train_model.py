@@ -143,10 +143,10 @@ if __name__ == '__main__':
             config[k] = v
             print(f'did not find {k} in main or model param config keys -- set {k} to {v} in main config nevertheless', flush=True)
 
-        if k != 'data_directory' and k != 'starting_weight_state_dict':
-            # we update the state dict name with the command line params
-            old_state_dict_fname = config['experiment']['state_dict_fname']
-            config['experiment']['state_dict_fname'] = old_state_dict_fname[:-3] + f'--{k[:5]}{v}' + old_state_dict_fname[-3:]
+        # if k != 'data_directory' and k != 'starting_weight_state_dict':
+        #     # we update the state dict name with the command line params
+        #     old_state_dict_fname = config['experiment']['state_dict_fname']
+        #     config['experiment']['state_dict_fname'] = old_state_dict_fname[:-3] + f'--{k[:5]}{v}' + old_state_dict_fname[-3:]
 
     start = time.time()
     print(f'starting new model training run at {start}')

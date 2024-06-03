@@ -10,7 +10,7 @@ config_dict = dict(
     ###### general ######
     device='cuda' if torch.cuda.is_available() else 'cpu',
     ###### save state dict as ######
-    save_path='.checkpoints',
+    save_path='.checkpoints/checkpoint.pt',
 
     ###### data ######
     dataset=Cell_Combined_Dataset,  # dataset class to use (from datasets directory)

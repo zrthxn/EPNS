@@ -48,11 +48,15 @@ class Trainer():
 
 
 
-    def train(self, loader, val_loader, epochs, device, training_strategy='one-step',
-              save_fname=None, start_from_epoch=0):
-        if save_fname is None:
-            save_fname = 'models/state_dicts/last_experiment.pt'
-            print(f'saving weights to default path {save_fname}')
+    def train(self, 
+              loader, 
+              val_loader, 
+              epochs, 
+              device, 
+              training_strategy = 'one-step',
+              save_path = '.checkpoints/last_experiment.pt', 
+              start_from_epoch = 0):
+        
         train_losses = []
         train_acc = []
         val_losses = []
@@ -65,6 +69,9 @@ class Trainer():
         last_state_dict = None
         best_rollout_loss = torch.inf
 
+        if not os.path.exists(os.path.join('.checkpoints')):
+            os.makedirs(os.path.join('.checkpoints'))
+            
         for ep in range(start_from_epoch, epochs):
             start_ep = time.time()
             beta = self._get_beta_kl_annealing_schedule(ep, epochs)
@@ -107,12 +114,12 @@ class Trainer():
                 val_losses.append(val_loss)
                 val_acc.append(val_mean_correct)
             stop = time.time()
+            
             print(
-                f'epoch {ep} \t\t loss {loss:2f} \t\t KL {mean_additional_loss} \t\t mean correct {mean_correct:2f}'
-                f'\t\t '
-                f'val loss {val_loss} \t\t val KL {val_mean_additional_loss} \t\t val mean correct {val_mean_correct:2f}'
-                f'\t\t took {stop - start_ep:2f} seconds'
-            , flush=True)
+                f'epoch {ep} \t loss {loss:2f} \t KL {mean_additional_loss} \t mean correct {mean_correct:2f}'
+                f'\t val loss {val_loss} \t val KL {val_mean_additional_loss} \t val mean correct {val_mean_correct:2f}'
+                f'\t took {stop - start_ep:2f} seconds', flush=True)
+            
             if self.use_wandb:
                 # log to wandb if applicable
                 wandb.log({'loss':loss, 'mean correct':mean_correct, 'KL': mean_additional_loss,
@@ -134,24 +141,15 @@ class Trainer():
                         print(f'found new best weights at epoch {ep}')
                         best_rollout_loss = val_rollout_loss
                         best_state_dict = self.model.state_dict()
-                        torch.save(best_state_dict, os.path.join('models', 'state_dicts', save_fname))
-                        if self.use_wandb:
-                            art = wandb.Artifact(save_fname + 'best', type="model")
-                            art.add_file(os.path.join('models', 'state_dicts', save_fname))
-                            wandb.log_artifact(art)
+                        torch.save(best_state_dict, save_path)
                 except utils.PCAException as e:
                     print(f'!!!! val rollout failed at epoch {ep} !!!!')
                     print('exception:', e)
 
             # save the last state dict every ten epochs and log to wandb if applicable
-            if not os.path.exists(os.path.join('models', 'state_dicts', 'last')):
-                os.makedirs(os.path.join('models', 'state_dicts', 'last'))
             last_state_dict = self.model.state_dict()
-            torch.save(last_state_dict, os.path.join('models', 'state_dicts', 'last', save_fname))
-            if self.use_wandb and (ep + 1) % 10 == 0:  # log the state dict every 10 epochs
-                art = wandb.Artifact(save_fname + 'last', type="model")
-                art.add_file(os.path.join('models', 'state_dicts', 'last', save_fname))
-                wandb.log_artifact(art)
+            torch.save(last_state_dict, save_path)
+        
         return train_losses, train_acc, val_losses, val_acc, best_state_dict, last_state_dict
 
     def train_one_ep(self, loader, device, training_strategy, epoch, beta=1):
@@ -327,4 +325,3 @@ class Trainer():
             beta = min(p_of_cycle / self.kl_increase_proportion_per_cycle * self.beta, self.beta)
 
         return beta
-

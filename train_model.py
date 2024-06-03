@@ -14,10 +14,8 @@ from epns import utils
 # torch.autograd.set_detect_anomaly(True)
 def train_model(config: dict):
     # check for some optional parameters in the config that we need to handle here:
-    if 'state_dict_fname' in config['experiment'].keys():
-        fname = config['experiment']['state_dict_fname']
-    else:
-        fname = f"state_dict_{config['experiment']['time']}.pt"
+    # if 'state_dict_fname' in config['experiment'].keys():
+    #     fname = config['save_path']
 
     if 'limit_num_data_points_to' in config.keys():
         num_data_points = config['limit_num_data_points_to']
@@ -28,8 +26,10 @@ def train_model(config: dict):
                                                                        limit_num_data_points_to=num_data_points)
     one_example_batch = next(iter(dataloader))  #(bs, c, t, h, w)
 
-    model: nn.Module = config['model'](**config['model_params'], im_dim=config['im_dim'],
-                            dynamic_channels=config['dynamic_channels'], pred_stepsize=config['pred_stepsize'])
+    model: nn.Module = config['model'](**config['model_params'], 
+                                       im_dim=config['im_dim'],
+                                       dynamic_channels=config['dynamic_channels'], 
+                                       pred_stepsize=config['pred_stepsize'])
 
     if 'starting_weight_state_dict' in config.keys():
         starting_state_dict = config['starting_weight_state_dict']
@@ -93,10 +93,8 @@ def train_model(config: dict):
         os.makedirs(os.path.join('models', 'state_dicts'))
 
 
-    save_path = os.path.join('models', 'state_dicts', fname)
-    print(f'will save model state dict as {fname}')
-
-    config['experiment']['state_dict_path'] = save_path
+    save_path = config['save_path']
+    print(f'will save model state dict as {save_path}')
 
     # train the model:
     trainer.train(
@@ -105,7 +103,7 @@ def train_model(config: dict):
         epochs=epochs, 
         device=device, 
         training_strategy=training_strategy, 
-        save_fname=fname, 
+        save_path=save_path, 
         start_from_epoch=start_from_epoch)
 
     print(f'all done, saved at state dict at {save_path}')

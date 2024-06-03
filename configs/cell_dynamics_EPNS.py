@@ -9,6 +9,8 @@ from epns.datasets import Cell_Combined_Dataset
 config_dict = dict(
     ###### general ######
     device='cuda' if torch.cuda.is_available() else 'cpu',
+    ###### save state dict as ######
+    save_path='.checkpoints',
 
     ###### data ######
     dataset=Cell_Combined_Dataset,  # dataset class to use (from datasets directory)
@@ -49,6 +51,7 @@ config_dict = dict(
     ),
 
     ###### training etc ######
+    try_use_wandb=True,
     loss_func=nn.functional.cross_entropy,#lambda pred, true: nn.CrossEntropyLoss(reduction='sum')(pred, true),  # only used for calculating some validation statistics
     optimizer=torch.optim.Adam,  # optimizer
     opt_kwargs={'lr': 1e-4, 'weight_decay': 1e-4, 'betas': (0.9, 0.9), 'eps':1e-06},  # optimizer parameters
@@ -57,8 +60,4 @@ config_dict = dict(
     num_kl_annealing_cycles=1,  # number of KL annealing cycles -- defaults to 1 if not specified
     kl_increase_proportion_per_cycle=0.125,  # proportion of each cycle spent increasing beta (vs keeping it constant),
     beta=64.,  # beta value in beta-vae loss term
-
-    ###### save state dict as ######
-    try_use_wandb=True,
-    experiment={'state_dict_fname': 'cell_dynamics_EPNS.pt'},
 )

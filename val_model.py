@@ -45,7 +45,8 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
         y_pred_dist, _, y_pred_disc, *_ = model(x, y)
         # y_pred_disc: (bs, channels, H, W)
         print(y_pred_disc.shape)
-        plt.imsave(y_pred_disc[0, 1, :, :], os.path.join(config["save_path"], "y_pred_disc.png"))
+        plt.imshow(y_pred_disc[0, 1, :, :])
+        plt.savefig(os.path.join(config["save_path"], "y_pred_disc.png"))
         # print(y_pred_dist.shape)
         exit()
 

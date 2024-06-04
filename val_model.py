@@ -91,5 +91,5 @@ if __name__ == '__main__':
             old_state_dict_fname = config['experiment']['state_dict_fname']
             config['experiment']['state_dict_fname'] = old_state_dict_fname[:-3] + f'--{k[:5]}{v}' + old_state_dict_fname[-3:]
 
-    state_dict = torch.load(args.state_dict, map_location="cpu")
+    state_dict = torch.load(args.state_dict, map_location=config['device'])
     validate_model(state_dict, config)

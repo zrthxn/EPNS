@@ -33,22 +33,25 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
         # initialize lazy layers by calling a fw pass:
         model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
     
-    for sample in val_dataloader:
+    N = len(val_dataloader)
+    for rx, sample in enumerate(val_dataloader):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
-        end_of_sim_time = sample.size(2)
-        start_time = np.random.randint(low=0, high=end_of_sim_time - pred_stepsize, size=sample.size(0))
-        target_time = start_time + pred_stepsize
-        
-        x = sample[range(sample.size(0)), :, start_time].to(device)
-        y = sample[range(sample.size(0)), :, target_time].to(device)
-        
-        y_pred_dist, _, y_pred_disc, *_ = model(x, y)
-        # y_pred_disc: (bs, channels, H, W)
-        print(y_pred_disc.shape)
-        plt.imshow(y_pred_disc[0, 1, :, :])
-        plt.savefig(os.path.join(config["save_path"], "y_pred_disc.png"))
-        # print(y_pred_dist.shape)
-        exit()
+        end_of_sim_time = sample.size(2) - pred_stepsize
+        for T in range(end_of_sim_time):
+            x = sample[range(sample.size(0)), :, T].to(device)
+            y = sample[range(sample.size(0)), :, T+pred_stepsize].to(device)
+            
+            _, _, y_pred_disc, *_ = model(x, y)
+            # y_pred_disc: (bs, channels, H, W)
+            for j in range(y_pred_disc.size(0)):
+                rix = (N * rx) + j
+                
+                saveto = os.path.join(config["save_path"], f"run_{rix}")
+                if not os.path.exists(saveto):
+                    os.mkdir(saveto)
+                    
+                plt.imshow(y_pred_disc[j, 1, :, :].cpu().numpy())
+                plt.savefig(os.path.join(saveto, f"plot_{T}.png"))
 
 
 if __name__ == '__main__':

@@ -37,6 +37,7 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     for rx, sample in enumerate(val_dataloader):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
         end_of_sim_time = sample.size(2) - pred_stepsize
+        videos = [[] for _ in range(sample.size(0))]
         for T in range(end_of_sim_time):
             x = sample[range(sample.size(0)), :, T].to(device)
             y = sample[range(sample.size(0)), :, T+pred_stepsize].to(device)
@@ -46,12 +47,11 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
             for j in range(y_pred_disc.size(0)):
                 rix = (N * rx) + j
                 
-                saveto = os.path.join(config["save_path"], f"run_{rix}")
-                if not os.path.exists(saveto):
-                    os.mkdir(saveto)
+                frame = y_pred_disc[j, 1, :, :].cpu().numpy()
+                saveto = os.path.join(config["save_path"], f"run_{rix}.npy")
                     
-                plt.imshow(y_pred_disc[j, 1, :, :].cpu().numpy())
-                plt.savefig(os.path.join(saveto, f"plot_{T}.png"))
+                videos[j].append(frame)
+                np.save(saveto, np.array(videos[j]))
 
 
 if __name__ == '__main__':

@@ -40,7 +40,7 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
         fps (int, optional). Defaults to 12.
     """
 
-    saveto = os.path.join(output_fname)
+    # saveto = os.path.join(output_fname)
     video = None
     
     for fname in sorted(os.listdir(directory)):
@@ -51,7 +51,7 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
         
         if video is None:
             height, width, _ = image.shape
-            video = cv2.VideoWriter(saveto, -1, fps, (width, height), isColor=True)
+            video = cv2.VideoWriter(output_fname, -1, fps, (width, height), isColor=True)
 
         video.write(image)
         

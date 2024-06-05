@@ -43,7 +43,7 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
     saveto = os.path.join(output_fname)
     video = None
     
-    for fname in os.listdir(directory):
+    for fname in sorted(os.listdir(directory)):
         if not fname.endswith(".png"):
             continue
         

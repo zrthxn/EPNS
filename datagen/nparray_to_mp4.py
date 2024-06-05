@@ -47,6 +47,7 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
         if not fname.endswith(".png"):
             continue
         
+        print(os.path.join(directory, fname))
         image = cv2.imread(os.path.join(directory, fname))
         
         if video is None:

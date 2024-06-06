@@ -55,5 +55,5 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
 
         video.write(image)
         
-    cv2.destroyAllWindows()
     video.release()
+    cv2.destroyAllWindows()

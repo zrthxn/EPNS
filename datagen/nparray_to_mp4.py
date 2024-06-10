@@ -5,7 +5,7 @@ from upycli import command
 
 
 @command
-def convert(directory: str, output_path: str, fps: int = 12):
+def convert(directory: str, output_path: str = None, fps: int = 12):
     """Convert set of np-arrays to set of videos
 
     Args:
@@ -14,11 +14,14 @@ def convert(directory: str, output_path: str, fps: int = 12):
         fps (int, optional). Defaults to 12.
     """
     
+    if not output_path:
+        output_path = directory
+    
     for fname in os.listdir(directory):
         if not fname.endswith(".npy"):
             continue
         
-        array: np.ndarray = np.load(fname)
+        array: np.ndarray = np.load(os.path.join(directory, fname))
         length, height , width = array.shape
 
         saveto = os.path.join(output_path, fname.replace(".npy", ".mp4")) 
@@ -26,7 +29,7 @@ def convert(directory: str, output_path: str, fps: int = 12):
         
         for fnum in range(length):
             video.write(array[fnum])
-            cv2.destroyAllWindows()
+            # cv2.destroyAllWindows()
             video.release()
 
 
@@ -40,7 +43,6 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
         fps (int, optional). Defaults to 12.
     """
 
-    # saveto = os.path.join(output_fname)
     video = None
     
     for fname in sorted(os.listdir(directory)):

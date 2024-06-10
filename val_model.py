@@ -1,16 +1,13 @@
 import os
 import argparse
-import time
-import torch
-import torch.nn as nn
 import numpy as np
-import datetime
-from matplotlib import pyplot as plt
-from epns.trainer import Trainer
+import torch
+from torch import nn
+from tqdm import tqdm
 from configs import load_config
-from epns import utils
 
 
+@torch.no_grad
 def validate_model(state_dict, config: dict, pred_stepsize = 1):
     if 'limit_num_data_points_to' in config.keys():
         num_data_points = config['limit_num_data_points_to']
@@ -28,13 +25,13 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     model.load_state_dict(state_dict)
     device = config['device']
     model.to(device)
+    model = model.eval()
     
-    with torch.no_grad():
-        # initialize lazy layers by calling a fw pass:
-        model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
+    # initialize lazy layers by calling a fw pass:
+    model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
     
     N = len(val_dataloader)
-    for rx, sample in enumerate(val_dataloader):
+    for rx, sample in tqdm(enumerate(val_dataloader)):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
         end_of_sim_time = sample.size(2) - pred_stepsize
         videos = [[] for _ in range(sample.size(0))]

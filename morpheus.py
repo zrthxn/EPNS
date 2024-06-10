@@ -205,12 +205,15 @@ def simulate(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
 
-        convert_csv(data_path, "logger_1_cell.id.csv", 
-            save_path=f"{data_path}/run_{index}",
-            cell_number=int(get_new_value("cell_number", index, first=True)),
-            wall_number=int(get_new_value("wall_number", index, first=True)),
-            plot=plot_hist,
-            debug=debug)
+        try:
+            convert_csv(data_path, "logger_1_cell.id.csv", 
+                save_path=f"{data_path}/run_{index}",
+                cell_number=int(get_new_value("cell_number", index, first=True)),
+                wall_number=int(get_new_value("wall_number", index, first=True)),
+                plot=plot_hist,
+                debug=debug)
+        except:
+            continue
 
         # cleanup
         os.remove("cell_and_walls_temp.xml")

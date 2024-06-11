@@ -35,7 +35,7 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
         end_of_sim_time = sample.size(2) - pred_stepsize
         videos = [[] for _ in range(sample.size(0))]
-        x = sample[range(sample.size(0)), :, 0].to(device)
+        x = sample[:, 1, 0, :, :].to(device)
         
         for _ in range(end_of_sim_time):
             _, _, y_pred_disc, *_ = model(x, None)

@@ -38,7 +38,7 @@ class Cellsort_Simulator(nn.Module):
 
 
 
-    def forward(self, x, x_true, id_to_type_dict=None):
+    def forward(self, x, x_true = None, id_to_type_dict = None):
 
         # x is x^{t}, x_true is x^{t+1}
         # id_to_type_dict is a dict that maps the cell id to its corresponding type
@@ -168,10 +168,8 @@ class Cellsort_Simulator(nn.Module):
         num_cells = cell_id_onehot.shape[1]  # largest number of cells in this batch
         # assert num_cells == 145, 'debugging'
         batch_idx = torch.arange(cell_id_onehot.shape[0]).repeat_interleave(num_cells).to(cell_id_onehot.device)  # (bs*max_num_cells)
-        cell_id_onehot = cell_id_onehot.flatten(start_dim=0, end_dim=1).unsqueeze(
-            1)  # shape(bs * max_num_cells, 1, h, w)
-        cell_type_onehot = cell_type_onehot.repeat_interleave(repeats=num_cells,
-                                                              dim=0)  # (bs*max_num_cells, num_types, h, w)
+        cell_id_onehot = cell_id_onehot.flatten(start_dim=0, end_dim=1).unsqueeze(1)  # shape(bs * max_num_cells, 1, h, w)
+        cell_type_onehot = cell_type_onehot.repeat_interleave(repeats=num_cells, dim=0)  # (bs*max_num_cells, num_types, h, w)
         # remove possible nodes containing only zero grid values (i.e. these cells do not exist)
 
         # allzero = torch.all(cell_id_onehot.flatten(start_dim=1) == 0, dim=1)  # shape (bs * max_num_nodes)

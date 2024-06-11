@@ -31,7 +31,7 @@ from xml.etree import ElementTree
 from upycli import command
 from tqdm import tqdm
 
-from datagen.png_to_nparray import convert as convert_png
+# from datagen.png_to_nparray import convert as convert_png
 from datagen.csv_to_nparray import convert as convert_csv
 
 

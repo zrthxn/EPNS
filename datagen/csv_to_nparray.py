@@ -133,7 +133,7 @@ def from_csv_frames(directory: str, prefix: str = "logger_2_cell"):
     directory_files = sorted(directory_files, key=lambda x: int(os.path.splitext(x)[0].split("_")[-1]))
     for csv_path in directory_files:
         frame = pd.read_csv(os.path.join(directory, csv_path), header=None, sep="\t").to_numpy()
-        frame = frame[1:, 1:]
+        frame = frame[1:, 1:].astype(np.int32)
         array.append(np.array([ frame, frame ]).transpose(1,2,0))
         
     return np.array(array)

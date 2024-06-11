@@ -14,10 +14,11 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     else:
         num_data_points = np.inf
 
-    _, val_dataloader, _ = config['dataset'].get_data_loaders(config, additional_loaders=[],
-                                                                       limit_num_data_points_to=num_data_points)
-    one_example_batch = next(iter(val_dataloader))  #(bs, c, t, h, w)
-
+    _, val_dataloader, _ = config['dataset'].get_data_loaders(
+        config, 
+        additional_loaders=[],
+        limit_num_data_points_to=num_data_points)
+    
     model: nn.Module = config['model'](**config['model_params'], 
                                        im_dim=config['im_dim'],
                                        dynamic_channels=config['dynamic_channels'], 
@@ -28,6 +29,7 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     model = model.eval()
     
     # initialize lazy layers by calling a fw pass:
+    one_example_batch = next(iter(val_dataloader))  #(bs, c, t, h, w)
     model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
     
     N = len(val_dataloader)

@@ -181,15 +181,12 @@ def simulate(
     CONFIG["cell_number"] = cell_number
     
     for index in tqdm(range(iterations)):
+        # make a new xml file
         global tree, root
         change_vars(root, index)
-        # make a new xml file
         
-        # add on first line
-        # <?xml version='1.0' encoding='UTF-8'?>
-        
-        # save the xml
-        tree.write("cell_and_walls_temp.xml", xml_declaration=True, encoding='utf-8')
+        # save the xml; add on first line <?xml version='1.0' encoding='UTF-8'?>
+        tree.write("temp__cell_and_walls.xml", xml_declaration=True, encoding='utf-8')
         
         data_path = os.path.abspath(output_path)
         # clear all old plot_*.png, .log, .dot, .gp files
@@ -200,11 +197,12 @@ def simulate(
                 pass
 
         # now start morpheus with the new xml
-        command = "morpheus --file cell_and_walls_temp.xml --outdir " + data_path
+        command = "morpheus --file temp__cell_and_walls.xml --outdir " + data_path
+        print(command)
         subprocess.run(command, shell=True, env={"PATH": HOME + "/.local/bin:" + os.getenv("PATH")}, 
-            stdout=subprocess.DEVNULL,
+            stdout=subprocess.STDOUT,
             stderr=subprocess.STDOUT)
-
+        break
         try:
             convert_csv(data_path, "logger_1_cell.id.csv", 
                 save_path=f"{data_path}/run_{index}",
@@ -216,7 +214,7 @@ def simulate(
             continue
 
         # cleanup
-        os.remove("cell_and_walls_temp.xml")
+        os.remove("temp__cell_and_walls.xml")
         for file in os.listdir(data_path):
             if str.endswith(file, ".gp") or str.endswith(file, ".log") or str.endswith(file, ".dot"):
                 os.remove(os.path.join(data_path, file))

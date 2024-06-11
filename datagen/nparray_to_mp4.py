@@ -2,7 +2,8 @@ import os
 import cv2
 import numpy as np
 from upycli import command
-
+from matplotlib import pyplot as plt
+from PIL import Image
 
 @command
 def convert(directory: str, output_path: str = None, fps: int = 12):
@@ -17,7 +18,7 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
     if not output_path:
         output_path = directory
     
-    for fname in os.listdir(directory):
+    for fname in sorted(os.listdir(directory)):
         if not fname.endswith(".npy"):
             continue
         
@@ -29,8 +30,9 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
         
         for fnum in range(length):
             video.write(array[fnum])
-            # cv2.destroyAllWindows()
-            video.release()
+            
+        cv2.destroyAllWindows()
+        video.release()
 
 
 @command

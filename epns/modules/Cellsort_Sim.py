@@ -48,10 +48,10 @@ class Cellsort_Simulator(nn.Module):
         # dissapeared and regains some volume, since we cannot infer the type then anymore
 
         if 'unet' in self.processor:
-            cell_id_onehot = self.get_onehot_grid(x[:,0:1], num_classes=self.max_num_cells)
-            cell_type_onehot = self.get_onehot_grid(x[:,1:2], num_classes=self.num_cell_types)
-            cell_id_onehot_true = self.get_onehot_grid(x_true[:,0:1], num_classes=self.max_num_cells) if x_true is not None else None
-            cell_type_onehot_true = self.get_onehot_grid(x_true[:,1:2], num_classes=self.num_cell_types) if x_true is not None else None
+            cell_id_onehot = utils.get_onehot_grid(x[:,0:1], num_classes=self.max_num_cells)
+            cell_type_onehot = utils.get_onehot_grid(x[:,1:2], num_classes=self.num_cell_types)
+            cell_id_onehot_true = utils.get_onehot_grid(x_true[:,0:1], num_classes=self.max_num_cells) if x_true is not None else None
+            cell_type_onehot_true = utils.get_onehot_grid(x_true[:,1:2], num_classes=self.num_cell_types) if x_true is not None else None
 
             model_input = torch.cat([cell_id_onehot, cell_type_onehot], dim=1)
             model_input_true = torch.cat([cell_id_onehot_true, cell_type_onehot_true], dim=1) if x_true is not None else None
@@ -67,10 +67,10 @@ class Cellsort_Simulator(nn.Module):
             else:
                 num_unique_cells_in_x_and_x_true = -1  # let F.one_hot infer the number of cells
             num_cells = num_unique_cells_in_x_and_x_true
-            cell_id_onehot = self.get_onehot_grid(x[:,0:1], num_classes=num_cells)  # (bs, max_num_cells, h, w)
-            cell_type_onehot = self.get_onehot_grid(x[:,1:2], num_classes=self.num_cell_types)  # (bs, num_types, h, w)
-            cell_id_onehot_true = self.get_onehot_grid(x_true[:,0:1], num_classes=num_cells) if x_true is not None else None
-            cell_type_onehot_true = self.get_onehot_grid(x_true[:,1:2], num_classes=self.num_cell_types) if x_true is not None else None
+            cell_id_onehot = utils.get_onehot_grid(x[:,0:1], num_classes=num_cells)  # (bs, max_num_cells, h, w)
+            cell_type_onehot = utils.get_onehot_grid(x[:,1:2], num_classes=self.num_cell_types)  # (bs, num_types, h, w)
+            cell_id_onehot_true = utils.get_onehot_grid(x_true[:,0:1], num_classes=num_cells) if x_true is not None else None
+            cell_type_onehot_true = utils.get_onehot_grid(x_true[:,1:2], num_classes=self.num_cell_types) if x_true is not None else None
 
             # convert the one_hot cell id tensor to nodes with grid features:
             cell_id_and_type_input, batch_idx = self.from_grid_to_nodes(cell_id_onehot, cell_type_onehot)  #(bs*num_cells, 1+num_types, h, w)
@@ -205,11 +205,6 @@ class Cellsort_Simulator(nn.Module):
             pred_type[range(len(type)), ..., type] += probs_id_tensor[..., id] # add the probability of seeing this id here as this id is of this type
         logits_pred_type = torch.log(pred_type + EPS)
         return logits_pred_type  # contains logits
-
-    def get_onehot_grid(self, tensor, num_classes=None):
-
-        return utils.get_onehot_grid(tensor, num_classes)
-
 
     def get_additional_val_stats(self, pred_disc, x_true):
         correct = torch.sum(

@@ -10,7 +10,7 @@
     </Global>
     <Space>
         <Lattice class="square">
-            <Size symbol="size" value="100 100 0"/>
+            <Size symbol="size" value="80 80 0"/>
             <Neighborhood>
                 <Order>1</Order>
             </Neighborhood>

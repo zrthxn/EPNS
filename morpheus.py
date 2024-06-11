@@ -203,7 +203,8 @@ def simulate(
 
         try:
             video = from_csv_frames(output_path)
-            np.save(os.path.join(output_path, f"run_{index}.npy"), video)
+            with open(os.path.join(output_path, f"run_{index}.npy"), 'wb') as f:
+                np.save(f, video)
             # convert_csv(data_path, "logger_1_cell.id.csv", 
             #     save_path=f"{data_path}/run_{index}",
             #     cell_number=int(get_new_value("cell_number", index, first=True)),

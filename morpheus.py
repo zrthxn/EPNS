@@ -186,7 +186,6 @@ def simulate(
         
         # save the xml; add on first line <?xml version='1.0' encoding='UTF-8'?>
         tree.write("temp__cell_and_walls.xml", xml_declaration=True, encoding='utf-8')
-        time.sleep(1)
         
         output_path = os.path.abspath(output_path)
         # clear all old plot_*.png, .log, .dot, .gp files

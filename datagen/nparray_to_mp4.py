@@ -47,7 +47,7 @@ def from_pngs(directory: str, output_fname: str, fps: int = 12):
 
     video = None
     
-    for fname in sorted(os.listdir(directory)):
+    for fname in sorted(os.listdir(directory), key=lambda x: int(os.path.splitext(x)[0].split("_")[-1])):
         if not fname.endswith(".png"):
             continue
         

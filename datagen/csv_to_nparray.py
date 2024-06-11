@@ -115,3 +115,25 @@ def convert(
 
     # save array
     np.save(save_path, arr)
+
+
+@command
+def from_csv_frames(directory: str, prefix: str = "logger_2_cell"):
+    # read in the csv and parse it into single frames
+    if not os.path.isdir(directory):    
+        # maybe the / or \ is missing
+        # is win?
+        directory = os.path.join(directory, "")
+        if not os.path.isdir(directory): 
+            raise ValueError("Path is not a folder")
+    
+    array = []
+    
+    directory_files = [ f for f in os.listdir(directory) if ".csv" in f and prefix in f ]
+    directory_files = sorted(directory_files, key=lambda x: int(os.path.splitext(x)[0].split("_")[-1]))
+    for csv_path in directory_files:
+        frame = pd.read_csv(os.path.join(directory, csv_path), header=None, sep="\t").to_numpy()
+        frame = frame[1:, 1:]
+        array.append(np.array([ frame, frame ]).transpose(1,2,0))
+        
+    return np.array(array)

@@ -27,16 +27,16 @@
 import os
 import time
 import subprocess
+import numpy as np
 from xml.etree import ElementTree
 from upycli import command
 from tqdm import tqdm
 
 # from datagen.png_to_nparray import convert as convert_png
-from datagen.csv_to_nparray import convert as convert_csv
+from datagen.csv_to_nparray import convert as convert_csv, from_csv_frames
 
 
 # kind of messy but meh
-HOME = os.getenv("HOME")
 VAR_NAME_MAPPER = {
     "start_time" : {"tag" : "StartTime", "attr" : "value"},
     "stop_time" : {"tag" : "StopTime", "attr" : "value"},
@@ -156,7 +156,6 @@ def simulate(
     time_step: int = 10,
     wall_number: int = 8,
     cell_number: int = 1,
-    plot_hist: bool = False, 
     clean: bool = True,
     debug: bool = False):
     """Run Morpheus Simulation.
@@ -187,42 +186,44 @@ def simulate(
         
         # save the xml; add on first line <?xml version='1.0' encoding='UTF-8'?>
         tree.write("temp__cell_and_walls.xml", xml_declaration=True, encoding='utf-8')
+        time.sleep(1)
         
-        data_path = os.path.abspath(output_path)
+        output_path = os.path.abspath(output_path)
         # clear all old plot_*.png, .log, .dot, .gp files
-        for file in os.listdir(data_path):
+        for file in os.listdir(output_path):
             if str.startswith(file, "plot_"):
-                os.remove(os.path.join(data_path, file))
+                os.remove(os.path.join(output_path, file))
             if str.endswith(file, ".log") or str.endswith(file, ".dot") or str.endswith(file, ".gp"):
                 pass
 
         # now start morpheus with the new xml
-        command = "morpheus --file temp__cell_and_walls.xml --outdir " + data_path
-        print(command)
-        subprocess.run(command, shell=True, env={"PATH": HOME + "/.local/bin:" + os.getenv("PATH")}, 
-            stdout=subprocess.STDOUT,
+        command = f"morpheus --file temp__cell_and_walls.xml --outdir {output_path}"
+        subprocess.run(command, shell=True, env={"PATH": os.path.join(os.getenv("HOME"), ".local/bin") + ":" + os.getenv("PATH")}, 
+            stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT)
-        break
+
         try:
-            convert_csv(data_path, "logger_1_cell.id.csv", 
-                save_path=f"{data_path}/run_{index}",
-                cell_number=int(get_new_value("cell_number", index, first=True)),
-                wall_number=int(get_new_value("wall_number", index, first=True)),
-                plot=plot_hist,
-                debug=debug)
+            video = from_csv_frames(output_path)
+            np.save(os.path.join(output_path, f"run_{index}.npy"), video)
+            # convert_csv(data_path, "logger_1_cell.id.csv", 
+            #     save_path=f"{data_path}/run_{index}",
+            #     cell_number=int(get_new_value("cell_number", index, first=True)),
+            #     wall_number=int(get_new_value("wall_number", index, first=True)),
+            #     plot=plot_hist,
+            #     debug=debug)
         except:
-            continue
+            ...
 
         # cleanup
         os.remove("temp__cell_and_walls.xml")
-        for file in os.listdir(data_path):
-            if str.endswith(file, ".gp") or str.endswith(file, ".log") or str.endswith(file, ".dot"):
-                os.remove(os.path.join(data_path, file))
-            if str.endswith(file, ".csv"):
-                os.remove(os.path.join(data_path, file))
+        for file in os.listdir(output_path):
+            if file.endswith(".gp") or file.endswith(".log") or file.endswith(".dot"):
+                os.remove(os.path.join(output_path, file))
+            if file.endswith(".csv"):
+                os.remove(os.path.join(output_path, file))
             if clean:
-                if str.startswith(file, "plot_"):
-                    os.remove(os.path.join(data_path, file))
+                if file.startswith("plot_"):
+                    os.remove(os.path.join(output_path, file))
 
     # print run time in green
     runtime = time.time() - start_time

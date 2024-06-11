@@ -32,7 +32,7 @@ def convert(
         save_path: str = None, 
         cell_number: int = 2, 
         wall_number: int = 8,
-        size: int = 100, 
+        size: int = 80, 
         plot: bool = False,
         debug: bool = False):
     

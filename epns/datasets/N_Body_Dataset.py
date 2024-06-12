@@ -43,7 +43,7 @@ class NBodyDataset(Dataset):
         self.multiplier = 200
 
         self.dir = dir_path
-        all_fnames = os.listdir(dir_path)
+        all_fnames = [f for f in os.listdir(dir_path) if f.endswith(".npy")]
         num_samples = min(num_samples, len(all_fnames))
         self.fnames = all_fnames[:num_samples]
         example = np.load(os.path.join(dir_path, self.fnames[0]))

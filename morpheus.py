@@ -202,15 +202,14 @@ def simulate(
             stderr=subprocess.STDOUT)
 
         try:
-            video = from_csv_frames(output_path)
-            with open(os.path.join(output_path, f"run_{index}.npy"), 'wb') as f:
-                np.save(f, video)
-            # convert_csv(data_path, "logger_1_cell.id.csv", 
-            #     save_path=f"{data_path}/run_{index}",
-            #     cell_number=int(get_new_value("cell_number", index, first=True)),
-            #     wall_number=int(get_new_value("wall_number", index, first=True)),
-            #     plot=plot_hist,
-            #     debug=debug)
+            # video = from_csv_frames(output_path)
+            # with open(os.path.join(output_path, f"run_{index}.npy"), 'wb') as f:
+            #     np.save(f, video)
+            convert_csv(output_path, "logger_1_cell.id.csv", 
+                save_path=f"{output_path}/run_{index}",
+                cell_number=int(get_new_value("cell_number", index, first=True)),
+                wall_number=int(get_new_value("wall_number", index, first=True)),
+                debug=debug)
         except:
             ...
 

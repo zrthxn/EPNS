@@ -19,7 +19,6 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
         additional_loaders=[],
         limit_num_data_points_to=num_data_points)
     
-    config["model_params"]["num_cell_types"] = 1
     model: nn.Module = config['model'](**config['model_params'], 
                                        im_dim=config['im_dim'],
                                        dynamic_channels=config['dynamic_channels'], 

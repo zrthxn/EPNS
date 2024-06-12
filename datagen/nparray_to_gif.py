@@ -47,5 +47,5 @@ def from_pngs(directory: str, output_path: str = None, fps: int = 12):
         
     DIR = [ fname for fname in os.listdir(directory) if fname.endswith(".png") ]
     DIR = sorted(DIR, key=lambda x: int(os.path.splitext(x)[0].split("_")[1]))
-    gif = [ Image.open(os.path.join(directory, fname)) for fname in DIR ]
+    gif = [ Image.open(os.path.join(directory, fname)).resize((320, 320), resample=Image.Resampling.NEAREST) for fname in DIR ]
     gif[0].save(output_path, save_all=True, append_images=gif[1:], duration=int((1/fps)*100), loop=0)

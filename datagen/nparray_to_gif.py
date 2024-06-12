@@ -23,11 +23,13 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
             continue
         
         array: np.ndarray = np.load(os.path.join(directory, fname)).astype(np.float32)
-        array = (array - array.max())  * 255 / (array.min() - array.max())
+        if len(array.shape) > 3:
+            array = array[:, :, :, 0]
+        array = array  * 255 / (array.max() - array.min())
         
         saveto = os.path.join(output_path, fname.replace(".npy", ".gif"))
         
-        gif = [ Image.fromarray(frame) for frame in array ]
+        gif = [ Image.fromarray(frame).resize((160, 160)) for frame in array ]
         gif[0].save(saveto, save_all=True, append_images=gif[1:], duration=int((1/fps)*100), loop=0)
 
 

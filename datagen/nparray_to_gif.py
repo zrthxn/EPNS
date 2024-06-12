@@ -32,6 +32,29 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
 
 
 @command
+def convert_one(path: str = None, fps: int = 12, size: int = 320):
+    """Convert set of np-arrays to set of GIFs
+
+    Args:
+        directory (str):
+        output_path (str):
+        fps (int, optional). Defaults to 12.
+    """
+
+    if not path.endswith(".npy"):
+        raise TypeError("Not a numpy file!")
+    
+    array: np.ndarray = np.load(path).astype(np.float32)
+    if len(array.shape) > 3:
+        array = array[:, :, :, 0]
+    array = array * 255 / (array.max() - array.min())
+    
+    saveto = path.replace(".npy", ".gif")
+    gif = [ Image.fromarray(frame).resize((size, size), resample=Image.Resampling.NEAREST) for frame in array ]
+    gif[0].save(saveto, save_all=True, append_images=gif[1:], duration=int((1/fps)*100), loop=0)
+
+
+@command
 def from_pngs(directory: str, output_path: str = None, fps: int = 12):
     """Convert set of np-arrays to set of GIFs
 

@@ -1,10 +1,8 @@
 import os
-import re
 import numpy as np
-from upycli import command
-from matplotlib import pyplot as plt
 from PIL import Image
-
+from upycli import command
+from matplotlib import animation, colormaps, pyplot as plt
 
 @command
 def convert(directory: str, output_path: str = None, fps: int = 12):
@@ -49,3 +47,26 @@ def from_pngs(directory: str, output_path: str = None, fps: int = 12):
     DIR = sorted(DIR, key=lambda x: int(os.path.splitext(x)[0].split("_")[1]))
     gif = [ Image.open(os.path.join(directory, fname)).resize((320, 320), resample=Image.Resampling.NEAREST) for fname in DIR ]
     gif[0].save(output_path, save_all=True, append_images=gif[1:], duration=int((1/fps)*100), loop=0)
+
+
+@command
+def color_plots(directory: str, output_path: str = None, cmap: str = "viridis", fps: int = 12):
+    if not output_path:
+        output_path = directory
+    
+    for fname in sorted(os.listdir(directory)):
+        if not fname.endswith(".npy"):
+            continue
+        
+        array: np.ndarray = np.load(os.path.join(directory, fname))
+        if len(array.shape) > 3:
+            array = array[:, :, :, 0]
+        fig = plt.figure()
+
+        frames = [
+            [plt.imshow(frame, cmap=colormaps[cmap], animated=True, origin="lower")]
+            for frame in array
+        ]
+
+        ani = animation.ArtistAnimation(fig, frames, interval=int((1/fps)*1000), blit=True, repeat_delay=1000)
+        ani.save(os.path.join(output_path, fname.replace(".npy", ".gif")) )

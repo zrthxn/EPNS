@@ -29,7 +29,7 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
         
         saveto = os.path.join(output_path, fname.replace(".npy", ".gif"))
         
-        gif = [ Image.fromarray(frame).resize((160, 160)) for frame in array ]
+        gif = [ Image.fromarray(frame).resize((320, 320), resample=Image.Resampling.NEAREST) for frame in array ]
         gif[0].save(saveto, save_all=True, append_images=gif[1:], duration=int((1/fps)*100), loop=0)
 
 

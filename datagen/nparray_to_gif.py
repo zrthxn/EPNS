@@ -25,7 +25,7 @@ def convert(directory: str, output_path: str = None, fps: int = 12):
         array: np.ndarray = np.load(os.path.join(directory, fname)).astype(np.float32)
         if len(array.shape) > 3:
             array = array[:, :, :, 0]
-        array = array  * 255 / (array.min() - array.max())
+        array = array * 255 / (array.max() - array.min())
         
         saveto = os.path.join(output_path, fname.replace(".npy", ".gif"))
         

@@ -14,7 +14,7 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     else:
         num_data_points = np.inf
 
-    _, val_dataloader, _ = config['dataset'].get_data_loaders(
+    _, _, test_dataloader = config['dataset'].get_data_loaders(
         config, 
         additional_loaders=[],
         limit_num_data_points_to=num_data_points)
@@ -29,11 +29,11 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     model = model.eval()
     
     # initialize lazy layers by calling a fw pass:
-    one_example_batch = next(iter(val_dataloader))  #(bs, c, t, h, w)
+    one_example_batch = next(iter(test_dataloader))  #(bs, c, t, h, w)
     model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
     
-    N = len(val_dataloader)
-    for rx, sample in tqdm(enumerate(val_dataloader)):
+    # N = len(test_dataloader)
+    for rx, sample in tqdm(enumerate(test_dataloader)):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
         end_of_sim_time = sample.size(2) - pred_stepsize
         videos = [[] for _ in range(sample.size(0))]
@@ -44,7 +44,7 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
             x = y_pred_disc[range(sample.size(0)), :].to(device)
             # y_pred_disc: (bs, channels, H, W)
             for j in range(y_pred_disc.size(0)):
-                rix = (N * rx) + j
+                rix = (rx * y_pred_disc.size(0)) + j
                 
                 frame = y_pred_disc[j, 1, :, :].cpu().numpy()
                 saveto = os.path.join(config["save_path"], f"run_{rix}.npy")

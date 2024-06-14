@@ -93,3 +93,4 @@ def color_plots(directory: str, output_path: str = None, cmap: str = "viridis", 
 
         ani = animation.ArtistAnimation(fig, frames, interval=int((1/fps)*1000), blit=True, repeat_delay=1000)
         ani.save(os.path.join(output_path, fname.replace(".npy", ".gif")) )
+        plt.close(fig)

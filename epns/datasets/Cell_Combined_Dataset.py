@@ -24,7 +24,7 @@ def get_data_loaders(config, additional_loaders=('test_same_init',), limit_num_d
     val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
     test_dataset = CellCombinedDataset(dir_test, is_test=True)
-    test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     print('shape of first datapoint:', one_file_shape, '. Number of train datapoints:', len(dataset.fnames),
           'number of val datapoints:', len(val_dataset.fnames), 'number of test datapoints:',

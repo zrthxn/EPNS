@@ -43,12 +43,14 @@ def get_data_loaders(config, additional_loaders=('test_same_init',), limit_num_d
 
 class CellCombinedDataset(Dataset):
     def __init__(self, dir_path, is_test=False, num_samples=np.inf):
-
         self.dir = dir_path
-        all_fnames = [f for f in os.listdir(dir_path) if f.endswith(".npy")]
-        num_samples = min(num_samples, len(all_fnames))
-        self.fnames = all_fnames[:num_samples]
-        self.samples_per_epoch_multiplier = len(all_fnames) / len(self.fnames)
+        
+        directory = [f for f in os.listdir(dir_path) if f.endswith(".npy")]
+        directory = sorted(directory, key=lambda x: int(os.path.splitext(x)[0].split("_")[1]))
+        
+        num_samples = min(num_samples, len(directory))
+        self.fnames = directory[:num_samples]
+        self.samples_per_epoch_multiplier = len(directory) / len(self.fnames)
         example = np.load(os.path.join(dir_path, self.fnames[0]))
         self.num_timesteps = example.shape[0]
         self.is_test = is_test

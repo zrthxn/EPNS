@@ -32,25 +32,25 @@ def validate_model(state_dict, config: dict, pred_stepsize = 1):
     one_example_batch = next(iter(test_dataloader))  #(bs, c, t, h, w)
     model(one_example_batch[:, :, 0].to(device), one_example_batch[:, :, 1].to(device))
     
-    # N = len(test_dataloader)
     for rx, sample in tqdm(enumerate(test_dataloader)):
         #  shape of data: (bs, channels, time, spatial_x, spatial_y)
         end_of_sim_time = sample.size(2) - pred_stepsize
-        videos = [[] for _ in range(sample.size(0))]
         x = sample[range(sample.size(0)), :, 0].to(device)
         
+        save_fnames = [f"run_{(rx * sample.size(0)) + j}.npy" for j in range(sample.size(0))]
+        videos = [[] for _ in range(sample.size(0))]
+        
         for _ in range(end_of_sim_time):
-            _, _, y_pred_disc, *_ = model(x)
-            x = y_pred_disc[range(sample.size(0)), :].to(device)
-            # y_pred_disc: (bs, channels, H, W)
-            for j in range(y_pred_disc.size(0)):
-                rix = (rx * y_pred_disc.size(0)) + j
-                
-                frame = y_pred_disc[j, 1, :, :].cpu().numpy()
-                saveto = os.path.join(config["save_path"], f"run_{rix}.npy")
-                    
+            # y_pred: (bs, channels, H, W)
+            _, _, y_pred, *_ = model(x)
+            x = y_pred[range(sample.size(0)), :].to(device)
+            
+            for j in range(y_pred.size(0)):
+                frame = y_pred[j, 1, :, :].cpu().numpy()
                 videos[j].append(frame)
-                np.save(saveto, np.array(videos[j]))
+        
+        for fname, video in zip(save_fnames, videos):    
+            np.save(os.path.join(config["save_path"], fname), np.array(video))
 
 
 if __name__ == '__main__':

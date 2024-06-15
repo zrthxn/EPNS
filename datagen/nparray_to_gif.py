@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from tqdm import tqdm
 from PIL import Image
 from upycli import command
 from matplotlib import animation, colormaps, pyplot as plt
@@ -77,7 +78,7 @@ def color_plots(directory: str, output_path: str = None, cmap: str = "viridis", 
     if not output_path:
         output_path = directory
     
-    for fname in sorted(os.listdir(directory)):
+    for fname in tqdm(sorted(os.listdir(directory))):
         if not fname.endswith(".npy"):
             continue
         

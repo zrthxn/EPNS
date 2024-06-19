@@ -1,0 +1,70 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[right=1in,left=1in,top=0.7in,bottom=0.7in]{geometry}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{hyperref}
+
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  filecolor=magenta,      
+  urlcolor=blue,
+}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+    \begin{titlepage}
+        \begin{center}
+            % \includegraphics[height=7.5em]{../resources/unilogo.png}
+            
+            \vspace{10em}
+            {\LARGE Global AI models for multicellular dynamics} \\ 
+            {\huge\bfseries Towards Learned Simulators\\for Cellular Migration}\\
+            
+            \vspace{5em}
+            {\large\bfseries Seminar in Mathematical Biology}\\
+            {\large Summer Semester 2024}
+            
+            \vspace{12em}
+            {\bfseries Authors} \\ 
+            Paul-Lennard Zschoppe\\
+            Syed Alisamar Husain
+            
+            \vspace{5em}
+            {\bfseries Supervisor} \\ Dr.\ Lutz Brusch
+        \end{center}
+    \end{titlepage}
+    \pagebreak
+
+    \tableofcontents
+    \listoffigures
+    \vspace{3em}
+    {\noindent\Large\bfseries Author Information \vspace{0.75em}}\\
+    \noindent\large Paul-Lennard Zschoppe\\
+    {\small MSc. Physics}\\
+    {\small Matriculation Number --- XXXXXXX}\\
+    {\it\small paul-lennard.zschoppe@mailbox.tu-dresden.de}\\\vspace{0.5em}
+    
+    \noindent\large Syed Alisamar Husain\\
+    {\small MSc. Computational Modelling and Simulation}\\
+    {\small Matriculation Number --- 5198172}\\
+    {\it\small syed\_alisamar.husain@mailbox.tu-dresden.de}
+    \pagebreak
+
+    \section{Background}
+
+    one \cite{minartz_cpm}
+    two \cite{minartz_epns}
+    three \cite{morpheus}
+
+    \newpage
+    \bibliographystyle{ieeetr}
+    \bibliography{./references}
+
+\end{document}

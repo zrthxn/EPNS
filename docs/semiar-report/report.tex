@@ -41,10 +41,8 @@
 
 \author{
     Paul-Lennard Zschoppe\footnote{4847097, paul-lennard.zschoppe@mailbox.tu-dresden.de}\\
-    {\small BSc. Physics}
     \and
     Syed Alisamar Husain\footnote{5198172, syed\_alisamar.husain@mailbox.tu-dresden.de}\\
-    {\small MSc. CMS (CLS)}
 }
 
 \begin{document}
@@ -73,7 +71,7 @@
 
 
     \section{Cellular-Potts Model}
-        Based on the earlier Potts Model\cite{potts_model}, this is a computational model that can be used to study and simulate
+        Based on the earlier Potts Model, this is a computational model that can be used to study and simulate
         the motion and dynamics of cells and tissues. It is also used to simulate 
         individual and collective cell behavior, tissue morphogenesis and cancer development.
         
@@ -213,9 +211,9 @@
         Our code is also available on Github\footnote{\url{https://github.com/zrthxn/EPNS}}.
 
         \paragraph{Dataset}
-        To generate training samples we have used Morpheus\footnote{\url{https://morpheus.gitlab.io/}}\cite{morpheus} 
-        model for a Cellular-Potts.
-        We generate random initial conditions with stationary walls and one cell and two cells. 
+        To generate training samples we have used a Morpheus\footnote{\url{https://morpheus.gitlab.io/}}\cite{morpheus} 
+        model for Cellular-Potts.
+        We generated initial conditions with random stationary walls and one cell and two cells. 
         This gives us two datasets, each eith 800 training samples, 100 validation and test samples.
         
         \paragraph{Training}
@@ -229,7 +227,7 @@
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_40.png}
                 \includegraphics[width=0.49\textwidth]{../images/run_32.png}
-                \caption{Neural Simulator: One Cell}
+                \caption{Neural Simulator: Dynamics of One Cell}
             \end{figure}
             The model is able to learn the expected dynamics of the cells.
             However we sometimes see gaps and holes
@@ -238,7 +236,7 @@
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_22.png}
                 \includegraphics[width=0.49\textwidth]{../images/run_12.png}
-                \caption{Neural Simulator: Two Cells}
+                \caption{Neural Simulator: Dynamics of Two Cells}
             \end{figure}
             Similarly we see expected output from the two-cell model. We also see that the
             single-cell model is able to transfer to the two-cell cases.
@@ -249,17 +247,22 @@
             Also, the cells sometimes lose volume and disappear.
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_5.png}
-                \caption{Neural Simulator: Edge Cases}
+                \caption{Edge Cases: Destruction of volume}
             \end{figure}
 
     \section{Conclusion}
-        Problem of predicting cell motility is non-trivial, many possible trajectories.
-        Architectural choices are not just for image reasons.
-        Edge Cases are rarely observable.
+        We conclude that the problem of predicting cell motility is non-trivial, and that
+        the architectural choices for the machine learning model are well suited to the problem.
+        Edge cases, while present, are rarely observed.
 
-        Applications to real biological data and use to infer idealized initial conditions.
-        Explainability of model may help understand how behaviours are decided.
-        Bypass the need for a mechanistic understanding of the system.
+        Applications to real-world microscopy data are possible with minimal changes to the model.
+        Explainability analysis may help understand how cells decide their motility.
+        Most notably, this approach bypasses the need for a mechanistic understanding of the system.
+
+        \subsection*{Contributions}
+            Review of the paper was done collaboratively. 
+            To produce the results shown, Paul worked on data generation and Ali on model training.
+            Both authors contributed equally to presentation slides and this article.
 
     
     \bibliographystyle{ieeetr}

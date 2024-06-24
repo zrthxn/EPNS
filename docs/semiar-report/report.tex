@@ -49,15 +49,17 @@
     \maketitle
 
     \begin{abstract}
-        Spatiotemporal models are applied to study myriads of physical, chemical and biological
-        phenomena, one of which is the problem of studying cellular dynamics.
-        Global AI models are being applied to models that exhibit dynamics in spatial 
-        and temporal domain. Successful applications of such neural simulators can be found in the 
-        domains of physics, chemistry, and structural biology, amongst others. 
+        Spatiotemporal models are well suited for the study of countless physical, chemical and biological
+        phenomena. In order to extrapolate dynamics or analyse system properties,
+        reliable, fast and also accurate simulations of such systems are needed, requiring well suited computational approaches.
+        One of such systems of interest concerns the dynamics of living cells moving through tissues,
+        which one can formulate using the aftermentioned cellular potts model.
 
-        In the presented work, the authors propose an autoregressive probabilistic model that can reproduce 
-        spatiotemporal dynamics of single cell migration, traditionally simulated with the 
-        Cellular Potts model. 
+        Machine learning has become an increasingly fast growing field in computer sciences,
+        bringing forth lots of different implementations suited for a huge variety of problems.
+
+        In the presented work, the authors propose an alternative autoregressive probabilistic model suited 
+        for such simulation of cellular migration.
         According to them, a neural simulator for cellular dynamics can augment lab experiments and 
         traditional computational methods to enhance our understanding of a cell's interaction 
         with its physical environment. 
@@ -71,30 +73,29 @@
 
 
     \section{Cellular-Potts Model}
-        Based on the earlier Potts Model, this is a computational model that can be used to study and simulate
-        the motion and dynamics of cells and tissues. It is also used to simulate 
+        Based on the earlier Potts Model, this is a computational model usable to study and simulate
+        the motion and dynamics of cells and tissues. Whilest also being used to simulate 
         individual and collective cell behavior, tissue morphogenesis and cancer development.
         
-        The model consists of a rectangular {\bfseries Euclidean lattice} where each cell is a subset 
-        of lattice sites sharing the same cell number. Lattice sites that are not occupied by 
-        cells are the medium. 
-        Consider function $x: L \to S$ that maps each lattice site $l_i$ to its state 
+        Consisting of a rectangular {\bfseries Euclidean lattice} where each cell is represented as a subset 
+        of lattice sites sharing the same cell number. Lattice sites which are unoccupied by 
+        cells can be refered as medium. 
+        Considering the function $x: L \to S$ each lattice site $l_i$ gets mapped to its state 
         $x(l_i) \in S$ where $S$ is the set of all cell numbers.
 
         \paragraph{Model Dynamics}
-        The dynamics of the model are governed by an energy function $H$.
-        At each iteration of the model a lattice site $l_i$ is chosen at random.
-        Then, a proposal is made to modify $x$ such that state $x(l_i)$ is changed to 
-        $x(l_j)$, where $l_j$ is a site adjacent to $l_i$.
+        The dynamics of the model are calculated using an associated energy function $H$.
+        Starting from given initial condictions, at each iteration a lattice site $l_i$ is chosen at random.
+        Then, a proposal is made to modify $x$, changing its state from $x(l_i)$ to 
+        $x(l_j)$, where $l_j$ is a lattice site adjacent to $l_i$.
 
-        The difference in energy $\Delta H$ between the two states is calculated, by using the 
-        energy function formulated as a Hamiltonian as in equation~\ref{eq:hamiltonian}.
-        Difference in energy $\Delta H$ decides if the new proposed state is accepted.
+        Negative energy differences $\Delta H$ between such two states,
+        are favored as the system is modeled to tend towards lower energies.
 
         \paragraph{Energy Function}
-        The original model proposed by Graner and Glazier\cite{cellular_potts} contains cells of two types, 
+        The original model proposed by Graner and Glazier\cite{cellular_potts} investigates cells of two types, 
         with different adhesion energies for cells of the same type and cells of a 
-        different type. Each cell type also has a different contact energy with the 
+        different type. Each cell type has a different contact energy with the 
         medium, and the cell volume is assumed to remain close to a target value. 
         
         The Hamiltonian is formulated as:
@@ -109,15 +110,16 @@
             \caption{Euclidean Lattice of Cellular Potts model}\label{fig:cpm}
         \end{figure}
 
-        If $\Delta H < 0$, the state is always accepted because systems tend to the lowest enegy state.
-        But if $\Delta H > 0$, accepted with probability $e^{-\Delta H / T}$
-        where $T$ is a parameter called Temperature.
-        A higher temperature makes it more likely for higher enegy states to be accepted. 
+        If $\Delta H < 0$, the proposal state gets always accepted, following the physical intuition.
+        However final states with $\Delta H > 0$, are also possible by introducing a latent system energy.
+        
+        Resulting in a probability scaling with $e^{-\Delta H / T}$, using $T$ as the Temperature.
+        Increasing temperature thus increases probability for greater losses in system energy. 
 
 
     \section{Machine Learning Formulation}
 
-        The authors utilize a machine learning model, based on the CVAE structure with 
+        The machine learning formulation used by the authors is based on a Conditional Variational Autoencoder (CVAE) structure with 
         an additional so called forward model to interpret images\cite{minartz_cpm}. 
 
         \subsection{Autoencoders}
@@ -131,10 +133,10 @@
                 \caption{Autoencoder Architecture}\label{fig:autoencoder}
             \end{figure}
 
-            To achieve this, we optimize parameters of encoder $g_{\theta} ({x_n})$ 
-            encodes a high dimensional input $X$ into a lower dimensional latent space $z$ 
-            and the parameters of decoder $f_{\phi} (g_{\theta} ({x_n}))$ which reconstructs it into $X'$,
-            such that the reconstruction is lossless.
+            To achieve this, we optimize parameters of an encoder $g_{\theta} ({x_n})$, 
+            projecting a high dimensional input $X$ into a lower dimensional latent space $z$ 
+            and the parameters of a decoder $f_{\phi} (g_{\theta} ({x_n}))$ which reconstructs it into $X'$.
+            This optimization is done in such a way, that the reconstruction gets nearly lossless.
 
             \begin{equation}
                 \mathcal{L}_{\phi, \theta}({x}, {x'}) = \frac{1}{N} \sum_{n=1}^{N} {({x_n} - f_{\phi} (g_{\theta} ({x_n})))}^2
@@ -142,10 +144,11 @@
             \end{equation}
             
             \paragraph{Variational Autoencoders}
-            Instead of mapping the input space $X$ into a fixed vector, variational autoencoders
+            To allow sampling the latent space to obtain a combination of multiple aspects of the input space
+            the concept of a variational autoencoder can be utilized.
+            Here instead of mapping the input space $X$ into a fixed vector, variational autoencoders
             map it into a distribution $p_\theta$ parameterized by $z$\cite{rocca_vaes}.
-            This makes it possible to sample the latent space to get samples that are a combination
-            of two entities in the input space.
+            
             To train VAEs, the Evidence Lower Bound (ELBO) loss function can be used.
 
             \paragraph{Conditional Variational Autoencoders}

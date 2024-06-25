@@ -49,20 +49,17 @@
     \maketitle
 
     \begin{abstract}
-        Spatiotemporal models are well suited for the study of countless physical, chemical and biological
-        phenomena. In order to extrapolate dynamics or analyse system properties,
-        reliable, fast and also accurate simulations of such systems are needed, requiring well suited computational approaches.
-        One of such systems of interest concerns the dynamics of living cells moving through tissues,
-        which one can formulate using the aftermentioned cellular potts model.
+        Spatiotemporal models are applied to study myriads of physical, chemical and biological
+        phenomena, one of which is the problem of studying cellular dynamics.
+        Global AI models are being applied to models that exhibit dynamics in spatial 
+        and temporal domain. Successful applications of such neural simulators can be found in the 
+        domains of physics, chemistry, and structural biology, amongst others. 
 
         Machine learning has become an increasingly fast growing field in computer sciences,
         bringing forth lots of different implementations suited for a huge variety of problems.
-
-        In the presented work, the authors propose an alternative autoregressive probabilistic model suited 
-        for such simulation of cellular migration.
-        According to them, a neural simulator for cellular dynamics can augment lab experiments and 
-        traditional computational methods to enhance our understanding of a cell's interaction 
-        with its physical environment. 
+        In the presented work, the authors propose an autoregressive probabilistic model that can reproduce 
+        spatiotemporal dynamics of single cell migration, traditionally simulated with the 
+        Cellular Potts model. 
     \end{abstract}
 
     % one\cite{minartz_cpm}
@@ -79,18 +76,18 @@
         
         Consisting of a rectangular {\bfseries Euclidean lattice} where each cell is represented as a subset 
         of lattice sites sharing the same cell number. Lattice sites which are unoccupied by 
-        cells can be refered as medium. 
+        cells are called the medium. 
         Considering the function $x: L \to S$ each lattice site $l_i$ gets mapped to its state 
         $x(l_i) \in S$ where $S$ is the set of all cell numbers.
 
         \paragraph{Model Dynamics}
-        The dynamics of the model are calculated using an associated energy function $H$.
+        The dynamics of the model are governed by an energy function $H$.
         Starting from given initial condictions, at each iteration a lattice site $l_i$ is chosen at random.
         Then, a proposal is made to modify $x$, changing its state from $x(l_i)$ to 
         $x(l_j)$, where $l_j$ is a lattice site adjacent to $l_i$.
 
-        Negative energy differences $\Delta H$ between such two states,
-        are favored as the system is modeled to tend towards lower energies.
+        Negative energy differences $\Delta H$ between two states,
+        is favored as the system tends towards lower energy states.
 
         \paragraph{Energy Function}
         The original model proposed by Graner and Glazier\cite{cellular_potts} investigates cells of two types, 
@@ -118,9 +115,9 @@
 
 
     \section{Machine Learning Formulation}
-
-        The machine learning formulation used by the authors is based on a Conditional Variational Autoencoder (CVAE) structure with 
-        an additional so called forward model to interpret images\cite{minartz_cpm}. 
+    
+        The authors utilize a machine learning model, based on the Conditional Variational Autoencoder (CVAE) with 
+        an additional so called forward model to interpret images. 
 
         \subsection{Autoencoders}
             The simple autoencoder is an architecture, with the 
@@ -136,7 +133,7 @@
             To achieve this, we optimize parameters of an encoder $g_{\theta} ({x_n})$, 
             projecting a high dimensional input $X$ into a lower dimensional latent space $z$ 
             and the parameters of a decoder $f_{\phi} (g_{\theta} ({x_n}))$ which reconstructs it into $X'$.
-            This optimization is done in such a way, that the reconstruction gets nearly lossless.
+            This optimization is done in such a way, that the reconstruction is nearly lossless.
 
             \begin{equation}
                 \mathcal{L}_{\phi, \theta}({x}, {x'}) = \frac{1}{N} \sum_{n=1}^{N} {({x_n} - f_{\phi} (g_{\theta} ({x_n})))}^2
@@ -144,10 +141,9 @@
             \end{equation}
             
             \paragraph{Variational Autoencoders}
-            To allow sampling the latent space to obtain a combination of multiple aspects of the input space
-            the concept of a variational autoencoder can be utilized.
-            Here instead of mapping the input space $X$ into a fixed vector, variational autoencoders
-            map it into a distribution $p_\theta$ parameterized by $z$\cite{rocca_vaes}.
+            Instead of mapping the input space $X$ into a fixed vector, variational autoencoders
+            map it into a distribution $p_\theta$ parameterized by $z$\cite{rocca_vaes},
+            and allow sampling the latent space to obtain a combination of multiple aspects of the input space.
             
             To train VAEs, the Evidence Lower Bound (ELBO) loss function can be used.
 
@@ -212,13 +208,11 @@
         a pre-trained model is not publically avaiable yet. Slight modifications of the original code were done. 
         Our code is also available on Github\footnote{\url{https://github.com/zrthxn/EPNS}}.
 
-        \paragraph{Dataset}
+        \paragraph{Dataset and Training}
         To generate training samples we have used a Morpheus\footnote{\url{https://morpheus.gitlab.io/}}\cite{morpheus} 
         model for Cellular-Potts.
-        We generated initial conditions with random stationary walls and one cell and two cells configurations. 
-        Resulting in two datasets, each containing 800 training samples, 100 validation and associated test samples.
-        
-        \paragraph{Training}
+        We generated initial conditions with random stationary walls and one cell and two cells, 
+        ti get two datasets, each with 800 training samples, 100 validation and test samples.
         We then trained two models using the aforementioned two datasets, using one NVIDIA A100 
         provided by HPC at ZIH, TU Dresden.
 
@@ -231,15 +225,13 @@
                 \includegraphics[width=0.49\textwidth]{../images/run_32.png}
                 \caption{Neural Simulator: Dynamics of One Cell}
             \end{figure}
-            The model was able to learn the expected dynamics of the cells.
-            However we sometimes see gaps and holes
-            in the cells, as well as some movement or flickering of walls.
-
+            
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_22.png}
                 \includegraphics[width=0.49\textwidth]{../images/run_12.png}
                 \caption{Neural Simulator: Dynamics of Two Cells}
             \end{figure}
+            The model was able to learn the expected dynamics of the cells.
             Similarly we can observe an expected output from the two-cell model.
             Intersting is the cases, where the single cell model was applied to two cell initial conditions
             and was able to transfer well towards expected dynamics.

@@ -208,19 +208,18 @@
 
 
     \section{Training and Analysis}
-        We train our own version of the model proposed by paper since, to our knowledge, 
-        a pre-trained model is not publically avaiable yet. We have modified the original
-        code published by the authors to able to do this. 
+        We trained our own version of the model proposed by paper since, to our knowledge, 
+        a pre-trained model is not publically avaiable yet. Slight modifications of the original code were done. 
         Our code is also available on Github\footnote{\url{https://github.com/zrthxn/EPNS}}.
 
         \paragraph{Dataset}
         To generate training samples we have used a Morpheus\footnote{\url{https://morpheus.gitlab.io/}}\cite{morpheus} 
         model for Cellular-Potts.
-        We generated initial conditions with random stationary walls and one cell and two cells. 
-        This gives us two datasets, each eith 800 training samples, 100 validation and test samples.
+        We generated initial conditions with random stationary walls and one cell and two cells configurations. 
+        Resulting in two datasets, each containing 800 training samples, 100 validation and associated test samples.
         
         \paragraph{Training}
-        We trained two models using the aforementioned two datasets, using one NVIDIA A100 
+        We then trained two models using the aforementioned two datasets, using one NVIDIA A100 
         provided by HPC at ZIH, TU Dresden.
 
         \subsection{Results and Analysis}
@@ -232,22 +231,23 @@
                 \includegraphics[width=0.49\textwidth]{../images/run_32.png}
                 \caption{Neural Simulator: Dynamics of One Cell}
             \end{figure}
-            The model is able to learn the expected dynamics of the cells.
+            The model was able to learn the expected dynamics of the cells.
             However we sometimes see gaps and holes
-            in the cells, as well as some movement of the walls.
+            in the cells, as well as some movement or flickering of walls.
 
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_22.png}
                 \includegraphics[width=0.49\textwidth]{../images/run_12.png}
                 \caption{Neural Simulator: Dynamics of Two Cells}
             \end{figure}
-            Similarly we see expected output from the two-cell model. We also see that the
-            single-cell model is able to transfer to the two-cell cases.
+            Similarly we can observe an expected output from the two-cell model.
+            Intersting is the cases, where the single cell model was applied to two cell initial conditions
+            and was able to transfer well towards expected dynamics.
             
             \paragraph{Edge Cases}
-            We have also seen some edge cases where the model breaks down.
+            However edge cases where the model breaks down are rarely observable.
             Sometimes we can see gaps and holes in the cells, as well as some movement of the walls.
-            Also, the cells sometimes lose volume and disappear.
+            Also, cell volume preservation is not guarenteed in many cases, sometimes even resulting in vanishing cells.
             \begin{figure}[H]\centering
                 \includegraphics[width=0.49\textwidth]{../images/run_5.png}
                 \caption{Edge Cases: Destruction of volume}
@@ -255,10 +255,10 @@
 
     \section{Conclusion}
         We conclude that the problem of predicting cell motility is non-trivial, and that
-        the architectural choices for the machine learning model are well suited to the problem.
+        specific architectural choices for machine learning models are well suited to the problem.
         Edge cases, while present, are rarely observed.
 
-        Applications to real-world microscopy data are possible with minimal changes to the model.
+        Applications to real-world microscopy data should be possible with minimal changes to the model.
         Explainability analysis may help understand how cells decide their motility.
         Most notably, this approach bypasses the need for a mechanistic understanding of the system.
 
